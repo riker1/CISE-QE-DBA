@@ -15,6 +15,12 @@ GPyOpt==1.2.6
 imageio==2.9.0
 jedi==0.17.0
 jupyter==1.0.0
+# Use an older JupyterLab 3.x stack compatible with jsonschema 3.2.0.
+# Newer JupyterLab 3.6.x pulls jupyterlab-server >=2.19, which requires jsonschema >=4.17.
+jupyterlab==3.1.18
+jupyterlab-server==2.10.3
+jupyter-server==1.24.0
+anyio==3.7.1
 # Match TensorFlow 2.12.x while keeping NumPy 1.23.5.
 keras==2.12.0
 kiwisolver==1.3.1
