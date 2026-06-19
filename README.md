@@ -1,56 +1,157 @@
-# QE-DBA (Query-Efficient Bayesian Optimization Decision Based Adversarial Attacks) ✏️
+# QE-DBA (Query-Efficient Bayesian Optimization Decision Based Adversarial Attacks)
 
-### Here is a brief introduction of what this project is about:
-* QE-DBA is - Query-Efficient Decision-Based Adversarial Attacks via Bayesian Optimization. 
-* Whenever Adversarial examples are concerned, the goal is to always minimize the distance between the original image and the perturbated image, subject to the constraint that we use the same model on both images.
-* So in this project we are aiming to do so by using Bayesian Optimization.
-* The result should be categorising the two images, different from each other, even if they look alike to the human eye.
+QE-DBA is a research project that explores query-efficient decision-based adversarial attacks using Bayesian Optimization. The goal is to generate adversarial examples that cause a classifier to misclassify an image while minimizing the perceptual difference between the original and perturbed images.
 
+## Overview
 
-## Now getting back to the project implementation-
+This repository contains:
 
-### ⚙️ Setup
+- Bayesian Optimization Decision-Based Attack (BO-DBA) implementation
+- Evaluation notebooks and experiments
+- ImageNet validation dataset preprocessing tools
+- Comparative evaluation against alternative adversarial attack methods
+- A Docker-based runtime environment for reproducing experiments
 
-**Step 1: Install the required libraries:**
+---
 
-For this particular project there are many things that are required to be installed before you run the program. All of these are given in the 'requirements.txt' file. Just give that file a glance to know what all modules you should install. However, if you feel like installing every single module mentioned in that file then just simply copy, paste and run the command given below using 'pip'. *As simple as it looks like* 💁‍♂️.
+## Recommended Setup (Docker)
+
+The easiest and most reliable way to run this project is with Docker.
+
+The original project dependencies are several years old and can be difficult to install on modern operating systems. A Docker image is provided to create a reproducible environment.
+
+### Prerequisites
+
+Install one of the following:
+
+- Docker Desktop (Windows/macOS)
+- Docker Engine (Linux)
+
+Verify Docker is working:
+
+```bash
+docker --version
 ```
-opencv-python prerequisites
-# Install command line compiler tools
-xcode-select --install
 
-# Install build tools and media packages via Homebrew
-brew install cmake pkg-config jpeg libpng libtiff openexr ffmpeg python numpy
+---
 
+## Build the Container
 
-pip install -r clean_requirements.txt 
+Clone the repository:
 
+```bash
+git clone <repository-url>
+cd CISE-QE-DBA
 ```
-**Step 2: Accessing Dataset**
 
-* You can download the ImageNet test dataset required for this project from here ➡️[ILSVRC2012_img_val.tar](https://academictorrents.com/details/5d6d0df7ed81efd49ca99ea4737e0ae5e3a5f2e5). 
-* Then you have to put this compressed folder inside the `BO-DBA/DataSet/` folder.
-* Now, all you need to do is to decompress it.
+Build the image:
 
-**Step 3: Data Preparation**
-
-For this step, first set your directory to DataSet and then run the 'Python preprocess_imagenet_validation_data.py' file. The commands that you have to type are given below:
+```bash
+docker buildx build \
+  --platform linux/amd64 \
+  -t cise-qe-dba-old .
 ```
+
+The build may take several minutes the first time.
+
+---
+
+## Run the Environment
+
+Start the container and launch Jupyter Notebook:
+
+```bash
+docker run \
+  --platform linux/amd64 \
+  --rm \
+  -it \
+  -p 8888:8888 \
+  -v "$PWD:/workspace" \
+  -w /workspace \
+  cise-qe-dba-old
+```
+
+Once the container starts, Jupyter Notebook will automatically launch.
+
+Open your browser and navigate to:
+
+```text
+http://localhost:8888/tree
+```
+
+No authentication token is required.
+
+---
+
+## Running the Demo
+
+After Jupyter loads:
+
+1. Open `Demo.ipynb`
+2. Execute notebook cells sequentially
+3. Experiment with configuration settings and attack parameters
+4. Review generated adversarial examples and evaluation metrics
+
+---
+
+## Dataset Preparation
+
+Download the ImageNet validation dataset:
+
+https://academictorrents.com/details/5d6d0df7ed81efd49ca99ea4737e0ae5e3a5f2e5
+
+Place the archive in:
+
+```text
+DataSet/
+```
+
+Then preprocess the dataset:
+
+```bash
 cd DataSet
-Python preprocess_imagenet_validation_data.py
+python preprocess_imagenet_validation_data.py
 ```
-## 📄Configuration
-In Configuration.yaml, set mod "Inception" or "ResNet" to choose targeted classifier.
 
-For detail configuration, see `BO-DBA/Demo.ipynb`.
+---
 
-## 💻Running
-To see the correct implementation of the project, first have a look at ➡️  `BO-DBA/Demo.ipynb`. The jupyter notebook implements the BO-DBA attack and makes it easier to understand. The .ipynb file also provides the comparision of different types of adversarial attacks. Thus, explaining how our approach of applying Bayesian Optimization is better than the others. 
+## Configuration
 
-If you wish to see the source code of all the evaluation experiments then please have a look at this -> `BO-DBA/Evaluation/`. Just remember to copy the codes to the main folder before running it!
-## 💡Authors
+Classifier settings are controlled through:
 
-- [@prashantjadiya](https://github.com/prashantjadiya)
-- [@zzs1324](https://github.com/zzs1324)
-- [@nmcdermo](https://github.com/nmcdermo)
+```text
+Configuration.yaml
+```
 
+Supported models include:
+
+- Inception
+- ResNet
+
+Additional configuration examples are available in:
+
+```text
+Demo.ipynb
+```
+
+---
+
+## Evaluation Experiments
+
+Additional evaluation notebooks can be found under:
+
+```text
+Evaluation/
+```
+
+These notebooks compare BO-DBA against other adversarial attack approaches and provide performance measurements.
+
+---
+
+## Authors
+
+- Prashant Jadiya
+- Zhensheng Sun
+- Nathan McDermott
+
+Docker modernization and dependency restoration by contributors to this repository.
