@@ -27,6 +27,10 @@ Install one of the following:
 - Docker Desktop (Windows/macOS)
 - Docker Engine (Linux)
 
+#### Get Docker:
+
+- https://docs.docker.com/get-started/introduction/get-docker-desktop/
+
 Verify Docker is working:
 
 ```bash
