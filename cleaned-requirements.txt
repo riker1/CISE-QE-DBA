@@ -14,73 +14,53 @@ GPy==1.10.0
 GPyOpt==1.2.6
 imageio==2.9.0
 jedi==0.17.0
-# Removed the old `jupyter==1.0.0` meta-package. It pulls a mixed classic Notebook stack
-# and can conflict with the explicit JupyterLab/Jupyter Server pins below.
-# jupyter==1.0.0
+#jupyter==1.0.0
 notebook==6.5.7
-# Use an older Notebook 6-era kernel stack. Newer ipykernel 6.29.x caused kernel_info timeouts.
 ipykernel==5.5.6
 ipython==7.34.0
 jupyter-client==6.1.12
 jupyter-core==4.12.0
-# Older console version compatible with jupyter-client 6.x.
 jupyter-console==6.2.0
 tornado==6.1
-# Use an older JupyterLab 3.x stack compatible with jsonschema 3.2.0.
-# Newer JupyterLab 3.6.x pulls jupyterlab-server >=2.19, which requires jsonschema >=4.17.
 jupyterlab==3.1.18
 jupyterlab-server==2.10.3
 jupyter-server==1.24.0
 anyio==3.7.1
-# Match TensorFlow 2.12.x while keeping NumPy 1.23.5.
-keras==2.12.0
+# Match TensorFlow 2.10.x requirements.
+keras==2.10.0
 kiwisolver==1.3.1
-# ImportError: lxml.html.clean module is now a separate project lxml_html_clean.
 lxml_html_clean==0.4.3
 lpips==0.1.3
 matplotlib==3.4.2
 mistune==0.8.4
-# Removed: Conda/Anaconda MKL package; pip/Docker rebuild does not need this.
 # mkl-fft==1.3.0
-# Removed: Conda/Anaconda MKL package; pip/Docker rebuild does not need this.
 # mkl-service==2.3.0
 networkx==2.5.1
 noise==1.2.2
-# Keep NumPy below 2.x because old GPy/paramz imports numpy.lib.function_base.
 numpy==1.23.5
 oauthlib==3.1.0
-# opencv-python==4.5.2.52 unavailable for this Python/platform combo; use nearest available 4.5.x release.
 opencv-python==4.5.3.56
 opt-einsum==3.1.0
 paramz==0.9.5
 Pillow==8.2.0
-# TensorFlow 2.12 needs a newer protobuf than the original export.
-protobuf==3.20.3
+# Match TensorFlow 2.10.x requirements: protobuf >=3.9.2,<3.20.
+protobuf==3.19.6
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
 PyJWT==1.7.1
 PySocks==1.7.1
 PyWavelets==1.1.1
 PyYAML==5.3.1
-# Keep older pyzmq for the Notebook 6-era kernel stack.
 pyzmq==20.0.0
-# Bumped because newer qtconsole releases require QtPy >=2.x.
 QtPy==2.0.1
 qtconsole==5.4.3
 requests-oauthlib==1.3.0
-# Keep old notebook/nbformat stack from pulling modern jsonschema/referencing behavior.
 jsonschema==3.2.0
-# GPyOpt imports pkg_resources, which is provided by setuptools.
 setuptools==68.2.2
 scikit-image==0.18.1
-# Compatible old scientific stack for Python 3.9 + GPy/paramz.
 scipy==1.9.3
-# Removed: old Qt/SIP pin is not available from pip for this Python/platform combo.
-# sip==4.19.13
 six==1.15.0
-# TensorFlow 2.6 requires numpy~=1.19.2, which conflicts with the current working scientific stack.
-# TensorFlow 2.12 is a better fit for Python 3.9 + NumPy 1.23.x.
-tensorflow==2.12.0
+tensorflow==2.10.1
 tensorboard-plugin-wit==1.6.0.post2
 termcolor==1.1.0
 terminado==0.9.4
@@ -89,7 +69,7 @@ torch==1.8.1
 torchaudio==0.8.1
 torchvision==0.9.1
 tqdm==4.60.0
-typing-extensions==3.10.0.0
+typing-extensions==4.9.0
 webencodings==0.5.1
 Werkzeug==1.0.1
 widgetsnbextension==3.5.1
