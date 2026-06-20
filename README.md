@@ -170,7 +170,7 @@ A quick verification path is:
 3. Set `queryBudgets = 2` for a short test run.
 4. Execute the notebook cells sequentially.
 
-If the environment is working, the notebook should load the dataset, initialize the classifier, and begin running model predictions. Longer runs with the default query budget may take significant time, especially on Apple Silicon systems running the `linux/amd64` image through Docker Desktop emulation.
+If the environment is working, the notebook should load the dataset, initialize the classifier, and begin running model predictions. The first execution may take several minutes while TensorFlow downloads pre-trained model weights. Longer runs with the default query budget may take significant time, especially on Apple Silicon systems running the `linux/amd64` image through Docker Desktop emulation.
 
 ---
 
@@ -252,4 +252,4 @@ For reproducibility and ease of use, the Docker-based workflow described above i
 
 ## Project Preservation Notes
 
-Docker-based modernization, dependency restoration, and Apple Silicon compatibility updates were added to preserve reproducibility of the original research environment and allow the experiments to continue running on modern hardware and operating systems.
+Docker-based modernization, dependency restoration, Jupyter compatibility fixes, TensorFlow startup workarounds, and Apple Silicon compatibility updates were added to preserve reproducibility of the original research environment and allow the experiments to continue running on modern hardware and operating systems.
