@@ -184,21 +184,62 @@ The notebook provides the primary implementation of the BO-DBA attack and demons
 
 ## Dataset Preparation
 
-Download the ImageNet validation dataset:
+Download the ImageNet 2012 validation dataset:
 
 https://academictorrents.com/details/5d6d0df7ed81efd49ca99ea4737e0ae5e3a5f2e5
 
-Place the downloaded archive into:
+Place the following files in the `DataSet/` directory:
 
 ```text
 DataSet/
+├── ILSVRC2012_img_val.tar
+├── imagenet_2012_validation_synset_labels.txt
+└── preprocess_imagenet_validation_data.py
 ```
 
-Then preprocess the dataset:
+Extract the validation archive:
 
 ```bash
 cd DataSet
-python preprocess_imagenet_validation_data.py
+
+mkdir -p ILSVRC2012_img_val
+
+tar -xf ILSVRC2012_img_val.tar \
+    -C ILSVRC2012_img_val
+```
+
+Preprocess the validation dataset:
+
+```bash
+python preprocess_imagenet_validation_data.py \
+    ILSVRC2012_img_val \
+    imagenet_2012_validation_synset_labels.txt
+```
+
+After preprocessing, the directory structure should resemble:
+
+```text
+DataSet/
+└── ILSVRC2012_img_val/
+    ├── n01440764/
+    ├── n01443537/
+    ├── n01592084/
+    └── ...
+```
+
+### Common Issue
+
+Do **not** run the preprocessing script against the current directory (`.`). Doing so will create the ImageNet class folders directly under `DataSet/` instead of under `DataSet/ILSVRC2012_img_val/`, causing the notebooks to fail with errors such as:
+
+```text
+FileNotFoundError:
+./DataSet/ILSVRC2012_img_val
+```
+
+The project expects all ImageNet class directories to exist beneath:
+
+```text
+DataSet/ILSVRC2012_img_val/
 ```
 
 ---
