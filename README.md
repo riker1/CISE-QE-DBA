@@ -16,177 +16,37 @@ This repository contains:
 
 ---
 
-## Quick Start
+## Recommended Workflow
 
-The fastest way to get started is with Docker.
+Follow these steps in order for a clean setup.
 
-```bash
-git clone https://github.com/riker1/CISE-QE-DBA
-cd CISE-QE-DBA
-
-docker buildx build \
-  --platform linux/amd64 \
-  -t cise-qe-dba-old .
-
-docker run \
-  --platform linux/amd64 \
-  --rm \
-  -it \
-  -p 8888:8888 \
-  -v "$PWD:/workspace" \
-  -w /workspace \
-  cise-qe-dba-old
-```
-
-Then open:
-
-```text
-http://localhost:8888/tree
-```
-
-and launch:
-
-```text
-Demo.ipynb
-```
-
----
-
-## Recommended Setup (Docker)
-
-The easiest and most reliable way to run this project is with Docker.
-
-The original project dependencies are several years old and can be difficult to install on modern operating systems. The provided Docker image recreates a compatible environment and eliminates the need to manually resolve legacy TensorFlow, OpenCV, GPy, and scientific computing dependencies.
-
-### Why Docker?
-
-This project was originally developed using a machine learning software stack that has changed significantly over time.
-
-Modern operating systems, Python versions, and package repositories no longer provide many of the exact library versions originally used by the project. As a result, attempting to install dependencies directly on a host system often leads to version conflicts and build failures.
-
-The provided Docker image recreates a compatible Linux environment using a carefully curated dependency stack that allows the original experiments to run consistently on:
-
-- Linux
-- Windows
-- Intel-based macOS systems
-- Apple Silicon (M1/M2/M3/M4) Macs
-
-The image is built for the `linux/amd64` platform to maximize compatibility with older machine learning libraries and research dependencies.
-
----
-
-## Prerequisites
-
-Install one of the following:
-
-### Windows / macOS
-
-- Docker Desktop
-
-Download:
-
-https://docs.docker.com/get-started/introduction/get-docker-desktop/
-
-### Linux
-
-- Docker Engine
-- Docker Buildx
-
-Verify Docker is working:
-
-```bash
-docker --version
-docker buildx version
-```
-
----
-
-## Build the Container
-
-Clone the repository:
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/riker1/CISE-QE-DBA
 cd CISE-QE-DBA
 ```
 
-Build the Docker image:
+### 2. Prepare the ImageNet Validation Dataset
 
-```bash
-docker buildx build \
-  --platform linux/amd64 \
-  -t cise-qe-dba-old .
-```
+The BO-DBA experiments require the ImageNet 2012 validation dataset.
 
-The first build may take several minutes because Docker must download the base image and install all project dependencies.
-
----
-
-## Run the Environment
-
-Start the container:
-
-```bash
-docker run \
-  --platform linux/amd64 \
-  --rm \
-  -it \
-  -p 8888:8888 \
-  -v "$PWD:/workspace" \
-  -w /workspace \
-  cise-qe-dba-old
-```
-
-The container automatically launches Jupyter Notebook.
-
-Open your browser and navigate to:
-
-```text
-http://localhost:8888/tree
-```
-
-No authentication token or password is required.
-
----
-
-## Expected Startup Output
-
-When the container starts successfully, you should see output similar to:
-
-```text
-Jupyter Notebook 6.x is running at:
-http://localhost:8888/
-```
-
-TensorFlow may display messages such as:
-
-```text
-Could not find CUDA drivers on your machine
-TF-TRT Warning: Could not find TensorRT
-```
-
-These messages are expected when running on systems without NVIDIA GPUs and can safely be ignored.
-
----
-
-## Running the Demo
-
-After Jupyter loads:
-
-1. Open `Demo.ipynb`
-2. Execute notebook cells sequentially
-3. Experiment with configuration settings and attack parameters
-4. Review generated adversarial examples and evaluation metrics
-
-The notebook provides the primary implementation of the BO-DBA attack and demonstrates how Bayesian Optimization can be used to generate query-efficient adversarial examples.
-
----
-
-## Dataset Preparation
-
-Download the ImageNet 2012 validation dataset:
+Download the dataset from Academic Torrents:
 
 https://academictorrents.com/details/5d6d0df7ed81efd49ca99ea4737e0ae5e3a5f2e5
+
+Students unfamiliar with BitTorrent may use one of the following clients:
+
+- Transmission (macOS, Linux)
+- qBittorrent (Windows, macOS, Linux)
+
+After opening the torrent file in your BitTorrent client, download:
+
+```text
+ILSVRC2012_img_val.tar
+```
+
+The completed archive should be approximately **6.3 GB**.
 
 Place the following files in the `DataSet/` directory:
 
@@ -197,11 +57,10 @@ DataSet/
 └── preprocess_imagenet_validation_data.py
 ```
 
-Extract the validation archive:
+Extract the validation archive into the directory expected by the project:
 
 ```bash
 cd DataSet
-
 mkdir -p ILSVRC2012_img_val
 
 tar -xf ILSVRC2012_img_val.tar \
@@ -227,16 +86,112 @@ DataSet/
     └── ...
 ```
 
-### Common Issue
+### 3. Build the Docker Environment
 
-Do **not** run the preprocessing script against the current directory (`.`). Doing so will create the ImageNet class folders directly under `DataSet/` instead of under `DataSet/ILSVRC2012_img_val/`, causing the notebooks to fail with errors such as:
+```bash
+docker buildx build \
+  --platform linux/amd64 \
+  -t cise-qe-dba-old .
+```
+
+The first build may take several minutes while Docker downloads and installs the required machine learning libraries.
+
+### 4. Start the Environment
+
+```bash
+docker run \
+  --platform linux/amd64 \
+  --rm \
+  -it \
+  -p 8888:8888 \
+  -v "$PWD:/workspace" \
+  -w /workspace \
+  cise-qe-dba-old
+```
+
+### 5. Open Jupyter Notebook
+
+Navigate to:
+
+```text
+http://localhost:8888/tree
+```
+
+Open:
+
+```text
+Demo.ipynb
+```
+
+### 6. Run the Demo
+
+Execute the notebook cells sequentially.
+
+For an initial functionality test, temporarily reduce:
+
+```python
+queryBudgets = 500
+```
+
+to:
+
+```python
+queryBudgets = 2
+```
+
+This allows the notebook to complete quickly and confirms that the environment, dataset, and attack pipeline are functioning correctly before launching longer experiments.
+
+---
+
+## Expected Startup Messages
+
+When a notebook kernel starts, the container uses a compatibility launcher that preloads TensorFlow and Matplotlib before starting `ipykernel`.
+
+You should see messages similar to:
+
+```text
+Preloading TensorFlow before ipykernel starts...
+Preloading matplotlib Agg backend before ipykernel starts...
+Preloads complete. Starting ipykernel...
+```
+
+These messages are expected.
+
+TensorFlow may also report missing CUDA or TensorRT libraries when running on systems without NVIDIA GPUs. These warnings are expected and do not prevent the experiments from running.
+
+---
+
+## Verification
+
+A quick verification path is:
+
+1. Start the Docker container.
+2. Open `Demo.ipynb`.
+3. Set `queryBudgets = 2` for a short test run.
+4. Execute the notebook cells sequentially.
+
+If the environment is working, the notebook should load the dataset, initialize the classifier, and begin running model predictions. Longer runs with the default query budget may take significant time, especially on Apple Silicon systems running the `linux/amd64` image through Docker Desktop emulation.
+
+---
+
+## Dataset Notes and Common Issues
+
+The project expects all ImageNet class directories to exist beneath:
+
+```text
+DataSet/ILSVRC2012_img_val/
+```
+
+Do **not** run the preprocessing script against the current directory (`.`). Doing so will create the ImageNet class folders directly under `DataSet/` instead of under `DataSet/ILSVRC2012_img_val/`.
+
+If the class folders are created directly under `DataSet/`, the notebooks may fail with an error similar to:
 
 ```text
 FileNotFoundError:
 ./DataSet/ILSVRC2012_img_val
 ```
 
-The project expects all ImageNet class directories to exist beneath:
+If this happens, rerun the preprocessing step using the correct path shown in the Recommended Workflow, or move the generated `n*` class directories into:
 
 ```text
 DataSet/ILSVRC2012_img_val/
@@ -292,6 +247,8 @@ For reproducibility and ease of use, the Docker-based workflow described above i
 - Prashant Jadiya
 - Zhensheng Sun
 - Nathan McDermott
+
+---
 
 ## Project Preservation Notes
 
